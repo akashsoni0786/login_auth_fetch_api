@@ -12,12 +12,14 @@ const theme = createTheme();
 
 export default function Login() {
     const navigate = useNavigate();
+    const [user,setUser] = React.useState("");
+    const [pass,setPass] = React.useState("");
   const handleSubmit = async (event) => {
     event.preventDefault();
     const inps = new FormData(event.currentTarget);
     const data = {
-        username: inps.get("email"),
-        password: inps.get("password"),
+        username: user,
+        password: pass,
     };
     const url = new URL("https://fbapi.sellernext.com/user/login");
     for (let i in data) {
@@ -37,10 +39,12 @@ export default function Login() {
       .then((json) => {
         localStorage.setItem("token",json.data.token);
         if(localStorage.getItem("token")=== 'undefined'){
-            alert("Wrong credentials")
+            alert("Wrong credentials");
         }
         else{
             navigate('/welcome',{state:{mytoken:localStorage.getItem("token")}});
+            setUser("");
+            setPass("");
         }
 
       }
@@ -86,6 +90,7 @@ export default function Login() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={(e)=>{setUser(e.target.value)}}
             />
             <TextField
               margin="normal"
@@ -96,6 +101,7 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={(e)=>{setPass(e.target.value)}}
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
